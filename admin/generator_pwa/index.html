@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIT-CS — Cockpit de Génération d'Affaires Ultime &amp; Éditeur Intuitif (PWA)</title>
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Google Fonts pour l'affichage en ligne (avec polices de secours intégrées pour l'offline) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&amp;family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&amp;family=Alex+Brush&amp;family=Dancing+Script:wght@700&amp;family=Great+Vibes&amp;display=swap" rel="stylesheet">
+    
+    <!-- Librairies de prestige locales/CDNs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #0A1F3D;
+            --primary-light: #142A52;
+            --gold: #D4AF37;
+            --gold-pale: #E8C77E;
+            --white-cassé: #F5F5F5;
+            --black-elegant: #051021;
+            --transition: all 0.2s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--black-elegant);
+            color: var(--white-cassé);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        header {
+            background-color: var(--primary);
+            border-bottom: 2px solid var(--gold);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 50px;
+        }
+
+        .header-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            color: var(--gold);
+            font-size: 16px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .app-container {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 50px);
+        }
+
+        /* CONFIG PANEL (LEFT) */
+        .controls-panel {
+            width: 420px;
+            background-color: var(--primary);
+            padding: 15px 20px;
+            border-right: 2px solid rgba(212, 175, 55, 0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow-y: auto;
+        }
+
+        .section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            font-weight: bold;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            padding-bottom: 3px;
+            margin-top: 5px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 9px;
+            color: var(--gold-pale);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            background-color: var(--primary-light);
+            border: 1px solid rgba(245, 245, 245, 0.15);
+            color: var(--white-cassé);
+            border-radius: 4px;
+            font-size: 12px;
+            transition: var(--transition);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* INTERACTIVE TOOL PALETTE */
+        .tool-palette {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            background-color: var(--primary-light);
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .tool-btn {
+            background-color: var(--primary);
+            color: var(--white-cassé);
+            border: 1px solid rgba(245,245,245,0.15);
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .tool-btn.active, .tool-btn:hover {
+            background-color: var(--gold);
+            color: var(--primary);
+            border-color: var(--gold);
+        }
+
+        .btn {
+            background-color: var(--gold);
+            color: var(--primary);
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            background-color: var(--gold-pale);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--gold);
+            border: 1.5px solid var(--gold);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(212, 175, 55, 0.1);
+        }
+
+        /* VIEWPORT (RIGHT) */
+        .canvas-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: auto;
+            background-color: var(--black-elegant);
+            position: relative;
+        }
+
+        .canvas-container {
+            position: relative;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.7);
+            border: 2px solid var(--gold);
+            background-color: var(--primary);
+        }
+
+        canvas {
+            display: block;
+            cursor: default;
+        }
+
+        .canvas-info {
+            margin-top: 15px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 11px;
+            color: var(--gold-pale);
+            letter-spacing: 1px;
+        }
+
+        .devis-item-row {
+            display: grid;
+            grid-template-columns: 1.8fr 0.6fr 0.9fr;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="header-title">COCKPIT DE GÉNÉRATION ET AUTOMATISATION DE PRESTIGE TIT-CS</div>
+        <div style="font-size: 11px; color: var(--gold-pale); font-family: 'Montserrat';">MOTEUR VECTORIEL INTEGRÉ · OFFLINE</div>
+    </header>
+
+    <!-- APP CONTAINER -->
+    <div class="app-container">
+        <!-- CONTROLS PANEL -->
+        <div class="controls-panel">
+            <p class="section-title">Type, Format &amp; Destination</p>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="docType">Type de support</label>
+                    <select id="docType">
+                        <option value="carte">Carte de Visite</option>
+                        <option value="badge">Badge d'ID</option>
+                        <option value="devis">Devis / Facture</option>
+                        <option value="lettre">Lettre A4</option>
+                        <option value="invitation">Carte d'Invitation</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="docFormat">Format officiel</label>
+                    <select id="docFormat">
+                        <!-- Loaded dynamically based on DocType -->
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="docDestination">Nature d'usage</label>
+                    <select id="docDestination">
+                        <option value="num">Numérique (Vibrant)</option>
+                        <option value="print">Impression Premium (Économie)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="themePreset">7 Modèles Préconfigurés</label>
+                    <select id="themePreset">
+                        <option value="cyber_gold">1. Cyber-Gold (Futuriste)</option>
+                        <option value="art_deco">2. Art Déco Royal (Prestige)</option>
+                        <option value="midnight_matrix">3. Midnight Matrix (Cyber)</option>
+                        <option value="ink_saver">4. Ink Saver Classic (Économe)</option>
+                        <option value="golden_grid">5. Golden Grid (Géométrique)</option>
+                        <option value="emerald">6. Émeraude Souverain (Luxe)</option>
+                        <option value="minimalist">7. Minimaliste Linéaire (Épuré)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- INTERACTIVE DRAWING & FORMATTING TOOL PALETTE -->
+            <p class="section-title">Outils d'Édition sur l'Aperçu</p>
+            <div class="tool-palette">
+                <button class="tool-btn active" id="toolSelect">🖱️ Sélection</button>
+                <button class="tool-btn" id="toolText">✍️ Texte</button>
+                <button class="tool-btn" id="toolRect">⬛ Rectangle</button>
+                <button class="tool-btn" id="toolLine">📏 Ligne d'or</button>
+                <button class="tool-btn" id="toolClear" style="border-color: #D9534F; color: #D9534F;">🗑️ Tout effacer</button>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="editorTextColor">Couleur d'encre</label>
+                    <select id="editorTextColor">
+                        <option value="#D4AF37">Doré Royal</option>
+                        <option value="#E8C77E">Doré Pâle</option>
+                        <option value="#F5F5F5">Blanc Cassé</option>
+                        <option value="#142A52">Bleu Nuit</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editorTextSize">Taille Police</label>
+                    <input type="number" id="editorTextSize" value="18" min="8" max="100">
+                </div>
+            </div>
+
+            <!-- CONTRAST SLIDER FOR SUNLIGHT -->
+            <div class="form-group">
+                <div class="slider-group">
+                    <label for="gridContrast">Opacité de Grille (Soleil de Bafang)</label>
+                    <span id="contrastVal" style="font-size: 10px; color: var(--gold);">50%</span>
+                </div>
+                <input type="range" id="gridContrast" min="0" max="100" value="50" style="padding: 0;">
+            </div>
+
+            <p class="section-title">Contenu Dynamique &amp; Saisie</p>
+            <div id="standardInputs">
+                <div class="form-group">
+                    <label for="inputName" id="lblInputName">Nom Complet / Invité</label>
+                    <input type="text" id="inputName" value="Yamdjeu Daniella">
+                </div>
+                <div class="form-group">
+                    <label for="inputRole" id="lblInputRole">Poste / Rôle d'affaires</label>
+                    <input type="text" id="inputRole" value="Directrice des Affaires Générales">
+                </div>
+                <div class="form-group">
+                    <label for="inputPhone" id="lblInputPhone">Tél d'affaires</label>
+                    <input type="text" id="inputPhone" value="+237 6 96 48 11 65">
+                </div>
+                <div class="form-group" id="groupEmail">
+                    <label for="inputEmail" id="lblInputEmail">E-mail d'affaires</label>
+                    <input type="text" id="inputEmail" value="daniella.yamdjeu@tit-cs.com">
+                </div>
+                <div class="form-group" id="groupPrice">
+                    <label for="inputPrice" id="lblInputPrice">Tarif / Note spéciale</label>
+                    <input type="text" id="inputPrice" value="Excel : dès 35 000 FCFA">
+                </div>
+            </div>
+
+            <!-- DEVIS ITEM MANAGER -->
+            <div id="devisItemManager" style="display: none;">
+                <label>Lignes du Tableau d'affaires</label>
+                <div id="devisItemsContainer"></div>
+                <button class="btn btn-outline" id="btnAddDevisItem" style="padding: 6px; font-size: 10px; margin-top: 5px;">+ Ajouter une Prestation</button>
+            </div>
+
+            <!-- SIGNATURE MASTER -->
+            <p class="section-title">Signatures de prestige &amp; Sceau</p>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="inputSignatory">Nom du Signataire</label>
+                    <input type="text" id="inputSignatory" value="Le Prince Joël NOUBISSIE TCHASSOM">
+                </div>
+                <div class="form-group">
+                    <label for="signatureStyle">Style de Signature</label>
+                    <select id="signatureStyle">
+                        <option value="alex">Alex Brush (Élégant)</option>
+                        <option value="dancing">Dancing Script (Moderne)</option>
+                        <option value="vibes">Great Vibes (Traditionnel)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- PHOTO UPLOAD -->
+            <div class="form-group" id="photoGroup" style="display: none;">
+                <label>Photo pour l'Arche d'Or</label>
+                <label for="photoFile" class="file-upload-btn">📷 Charger la Photo de la DAG</label>
+                <input type="file" id="photoFile" accept="image/*">
+            </div>
+
+            <!-- AI ASSISTANT TEMPLATES -->
+            <div class="form-group" id="assistantGroup" style="display: none;">
+                <label>Assistant Administratif IA</label>
+                <select id="selectLetterTemplate">
+                    <option value="" disabled selected>Choisissez un modèle d'IA...</option>
+                    <option value="niu">Lettre de demande d'Identifiant Unique (N.I.U.)</option>
+                    <option value="banque">Lettre de demande d'ouverture de compte d'affaires</option>
+                    <option value="devis">Lettre d'accompagnement de devis commercial</option>
+                    <option value="facture">Lettre d'envoi et de rappel de solde de facture</option>
+                </select>
+            </div>
+
+            <p class="section-title">Base de Données Locale (Local)</p>
+            <div class="profile-actions">
+                <button class="btn btn-outline" id="btnSaveDB">💾 Sauvegarder</button>
+                <button class="btn btn-outline" id="btnDeleteProfile" style="border-color: #D9534F; color: #D9534F;">❌ Supprimer</button>
+            </div>
+            <div class="form-group">
+                <label>Charger un profil</label>
+                <select id="selectProfile">
+                    <option value="" disabled selected>Sélectionnez un profil...</option>
+                </select>
+            </div>
+
+            <p class="section-title">Exportations</p>
+            <button class="btn" id="btnExportPNG">📥 Exporter en PNG (WhatsApp)</button>
+            <button class="btn btn-outline" id="btnExportPDF" style="border-color: #5CB85C; color: #5CB85C;">📄 Exporter en PDF CMJN (300 DPI)</button>
+        </div>
+
+        <!-- CANVAS VIEWPORT -->
+        <div class="canvas-panel">
+            <div class="canvas-container">
+                <canvas id="previewCanvas"></canvas>
+            </div>
+            <div class="canvas-info" id="canvasInfo">Gabarit : Carte de Visite | Format : Européen (85x55 mm) | DPI : 300</div>
+        </div>
+    </div>
+
+    <!-- MAIN APP SCRIPT -->
+    <script>
+        const canvas = document.getElementById('previewCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        const themeSelect = document.getElementById('themeSelect');
+        const docTypeSelect = document.getElementById('docType');
+        const docFormatSelect = document.getElementById('docFormat');
+        const docDestinationSelect = document.getElementById('docDestination');
+        const themePresetSelect = document.getElementById('themePreset');
+        const gridContrast = document.getElementById('gridContrast');
+        const contrastVal = document.getElementById('contrastVal');
+        
+        const inputSignatory = document.getElementById('inputSignatory');
+        const signatureStyleSelect = document.getElementById('signatureStyle');
+
+        const inputName = document.getElementById('inputName');
+        const inputRole = document.getElementById('inputRole');
+        const inputPhone = document.getElementById('inputPhone');
+        const inputEmail = document.getElementById('inputEmail');
+        const inputPrice = document.getElementById('inputPrice');
+        
+        const devisItemManager = document.getElementById('devisItemManager');
+        const devisItemsContainer = document.getElementById('devisItemsContainer');
+        const btnAddDevisItem = document.getElementById('btnAddDevisItem');
+        
+        const photoGroup = document.getElementById('photoGroup');
+        const photoFile = document.getElementById('photoFile');
+        const assistantGroup = document.getElementById('assistantGroup');
+        const selectLetterTemplate = document.getElementById('selectLetterTemplate');
+        
+        const btnSaveDB = document.getElementById('btnSaveDB');
+        const btnDeleteProfile = document.getElementById('btnDeleteProfile');
+        const selectProfile = document.getElementById('selectProfile');
+        
+        const btnExportPNG = document.getElementById('btnExportPNG');
+        const btnExportPDF = document.getElementById('btnExportPDF');
+
+        // Formats config per DocType
+        const formatsConfig = {
+            carte: [
+                { id: "euro", label: "Format Européen (85x55 mm)", w: 1004, h: 638 },
+                { id: "us", label: "Format Américain (89x51 mm)", w: 1050, h: 600 },
+                { id: "square", label: "Format Carré (65x65 mm)", w: 760, h: 760 }
+            ],
+            badge: [
+                { id: "std_id", label: "Format ID Standard (54x86 mm)", w: 600, h: 950 },
+                { id: "event", label: "Format Événementiel (80x120 mm)", w: 750, h: 1120 },
+                { id: "large", label: "Format Grand Badge (100x150 mm)", w: 850, h: 1280 }
+            ],
+            devis: [
+                { id: "a4_devis", label: "Format A4 Standard", w: 1000, h: 1414 },
+                { id: "us_devis", label: "Format US Letter", w: 1000, h: 1290 }
+            ],
+            lettre: [
+                { id: "a4_lettre", label: "Format A4 Standard", w: 1000, h: 1414 },
+                { id: "us_lettre", label: "Format US Letter", w: 1000, h: 1290 },
+                { id: "a3_lettre", label: "Format A3 Premium", w: 1200, h: 1700 }
+            ],
+            invitation: [
+                { id: "landscape_inv", label: "Format Paysage A5", w: 1100, h: 680 },
+                { id: "square_inv", label: "Format Carré Luxe (15x15)", w: 900, h: 900 }
+            ]
+        };
+
+        // Theme Preset configurations (Colors and graphics adjustments)
+        const presetsConfig = {
+            cyber_gold: { bg: "#0A1F3D", gold: "#D4AF37", white: "#F5F5F5", style: "cyber" },
+            art_deco: { bg: "#04142c", gold: "#D4AF37", white: "#F5F5F5", style: "deco" },
+            midnight_matrix: { bg: "#020a17", gold: "#D4AF37", white: "#F5F5F5", style: "matrix" },
+            ink_saver: { bg: "#FFFFFF", gold: "#8B6508", white: "#1A1A1A", style: "saver" },
+            golden_grid: { bg: "#0A1F3D", gold: "#D4AF37", white: "#FFFFFF", style: "grid" },
+            emerald: { bg: "#012615", gold: "#D4AF37", white: "#F5F5F5", style: "emerald" },
+            minimalist: { bg: "#051021", gold: "#D4AF37", white: "#E0E0E0", style: "minimal" }
+        };
+
+        let loadedPhoto = null;
+        let drawingObjects = []; // Stores custom drawn objects for interactive editor
+        let activeTool = "toolSelect";
+        let isPainting = false;
+        let startX, startY;
+
+        // Custom drawn elements class representing layers in the canvas
+        class CanvasObject {
+            constructor(type, x1, y1, x2, y2, color, size, text="") {
+                this.type = type; // "rect", "line", "text"
+                this.x1 = x1; this.y1 = y1;
+                this.x2 = x2; this.y2 = y2;
+                this.color = color;
+                this.size = size;
+                this.text = text;
+            }
+            draw() {
+                ctx.strokeStyle = this.color;
+                ctx.fillStyle = this.color;
+                ctx.lineWidth = this.size;
+                if (this.type === "rect") {
+                    ctx.strokeRect(this.x1, this.y1, this.x2 - this.x1, this.y2 - this.y1);
+                } else if (this.type === "line") {
+                    ctx.beginPath();
+                    ctx.moveTo(this.x1, this.y1);
+                    ctx.lineTo(this.x2, this.y2);
+                    ctx.stroke();
+                } else if (this.type === "text") {
+                    ctx.font = `bold ${this.size}px 'Montserrat', sans-serif`;
+                    ctx.fillText(this.text, this.x1, this.y1);
+                }
+            }
+        }
+
+        // TOOL PALETTE SELECTION
+        const tools = ["toolSelect", "toolText", "toolRect", "toolLine"];
+        tools.forEach(t => {
+            document.getElementById(t).addEventListener('click', (e) => {
+                tools.forEach(btn => document.getElementById(btn).classList.remove('active'));
+                e.target.classList.add('active');
+                activeTool = t;
+            });
+        });
+
+        document.getElementById('toolClear').addEventListener('click', () => {
+            if (confirm("Rassurez-vous de vouloir supprimer tous les calques dessinés sur l'aperçu ?")) {
+                drawingObjects = [];
+                drawCanvas();
+            }
+        });
+
+        // CANVAS MOUSE EVENTS FOR DIRECT DRAWING
+        canvas.addEventListener('mousedown', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            // Scale coords
+            startX = (e.clientX - rect.left) * (canvas.width / rect.width);
+            startY = (e.clientY - rect.top) * (canvas.height / rect.height);
+            isPainting = true;
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isPainting || activeTool === "toolSelect") return;
+            const rect = canvas.getBoundingClientRect();
+            const currX = (e.clientX - rect.left) * (canvas.width / rect.width);
+            const currY = (e.clientY - rect.top) * (canvas.height / rect.height);
+
+            drawCanvas(); // Redraw static layers
+
+            // Draw current drawing feedback
+            ctx.strokeStyle = document.getElementById('editorTextColor').value;
+            ctx.lineWidth = parseInt(document.getElementById('editorTextSize').value) / 4 || 2;
+            if (activeTool === "toolRect") {
+                ctx.strokeRect(startX, startY, currX - startX, currY - startY);
+            } else if (activeTool === "toolLine") {
+                ctx.beginPath(); ctx.moveTo(startX, startY); ctx.lineTo(currX, currY); ctx.stroke();
+            }
+        });
+
+        canvas.addEventListener('mouseup', (e) => {
+            if (!isPainting) return;
+            isPainting = false;
+            const rect = canvas.getBoundingClientRect();
+            const endX = (e.clientX - rect.left) * (canvas.width / rect.width);
+            const endY = (e.clientY - rect.top) * (canvas.height / rect.height);
+
+            const color = document.getElementById('editorTextColor').value;
+            const size = parseInt(document.getElementById('editorTextSize').value) || 16;
+
+            if (activeTool === "toolRect") {
+                drawingObjects.push(new CanvasObject("rect", startX, startY, endX, endY, color, size / 4));
+            } else if (activeTool === "toolLine") {
+                drawingObjects.push(new CanvasObject("line", startX, startY, endX, endY, color, size / 4));
+            } else if (activeTool === "toolText") {
+                const text = prompt("Saisissez votre texte de précision d'affaires :");
+                if (text) {
+                    drawingObjects.push(new CanvasObject("text", startX, startY, 0, 0, color, size, text));
+                }
+            }
+            drawCanvas();
+        });
+
+        // 6. Photo upload handler
+        photoFile.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        loadedPhoto = img;
+                        drawCanvas();
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // 7. Render dynamic format options
+        function loadFormatsForDocType() {
+            const docType = docTypeSelect.value;
+            const formats = formatsConfig[docType];
+            docFormatSelect.innerHTML = "";
+            formats.forEach(f => {
+                const opt = document.createElement('option');
+                opt.value = f.id;
+                opt.textContent = f.label;
+                docFormatSelect.appendChild(opt);
+            });
+            drawCanvas();
+        }
+
+        docTypeSelect.addEventListener('change', loadFormatsForDocType);
+        docFormatSelect.addEventListener('change', drawCanvas);
+        themePresetSelect.addEventListener('change', drawCanvas);
+
+        // 8. MAIN DYNAMIC GRAPHIC REDRAW ENGINE
+        function drawCanvas() {
+            const docType = docTypeSelect.value;
+            const formatId = docFormatSelect.value;
+            const destination = docDestinationSelect.value;
+            const presetId = themePresetSelect.value;
+            
+            const name = inputName.value;
+            const role = inputRole.value;
+            const phone = inputPhone.value;
+            const email = inputEmail.value;
+            const price = inputPrice.value;
+            const contrast = gridContrast.value / 100;
+            const signatory = inputSignatory.value;
+            const sigStyle = signatureStyleSelect.value;
+
+            // Load Format dimensions
+            const formats = formatsConfig[docType];
+            const activeFormat = formats.find(f => f.id === formatId) || formats[0];
+            
+            canvas.width = activeFormat.w;
+            canvas.height = activeFormat.h;
+            const w = canvas.width;
+            const h = canvas.height;
+
+            // Load Preset configurations
+            const preset = presetsConfig[presetId];
+            
+            // Overrides background if print premium (ink saver) is active
+            let isPrintSaver = (destination === "print" || preset.style === "saver");
+            let bgFillColor = isPrintSaver ? "#FFFFFF" : preset.bg;
+            let themeGold = preset.gold;
+            let themeWhite = isPrintSaver ? "#1A1A1A" : preset.white;
+
+            // Drawing background
+            ctx.fillStyle = bgFillColor;
+            ctx.fillRect(0, 0, w, h);
+
+            // Grids drawing (only if not in ink saver print mode)
+            if (!isPrintSaver) {
+                ctx.strokeStyle = `rgba(20, 42, 82, ${contrast})`;
+                ctx.lineWidth = 1;
+                for (let i = 50; i < w; i += 120) {
+                    ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, h); ctx.stroke();
+                }
+                for (let i = 50; i < h; i += 120) {
+                    ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(w, i); ctx.stroke();
+                }
+            }
+
+            // Draw double golden borders with Art Deco styling
+            ctx.strokeStyle = themeGold;
+            ctx.lineWidth = 3.5;
+            ctx.strokeRect(20, 20, w - 40, h - 40);
+
+            ctx.strokeStyle = colorPaleGold;
+            ctx.lineWidth = 1;
+            ctx.strokeRect(30, 30, w - 60, h - 60);
+
+            // Art Deco Corners filigrees per theme
+            if (preset.style === "deco") {
+                drawArtDecoCorner(30, 30, 80, "tl", themeGold);
+                drawArtDecoCorner(w - 30, 30, 80, "tr", themeGold);
+                drawArtDecoCorner(30, h - 30, 80, "bl", themeGold);
+                drawArtDecoCorner(w - 30, h - 30, 80, "br", themeGold);
+            }
+
+            // DYNAMIC ADAPTIVE GRAPHIC LINES
+            // Cyber traces emerge dynamically from the nominee role to connect with the QR Code
+            if (preset.style === "cyber" || preset.style === "matrix" || preset.style === "grid") {
+                ctx.strokeStyle = `rgba(212, 175, 55, 0.15)`;
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(w / 2, h / 2);
+                ctx.lineTo(w / 2 + 100, h / 2 + 80);
+                ctx.lineTo(w - 150, h - 150);
+                ctx.stroke();
+                ctx.fillStyle = themeGold;
+                ctx.beginPath(); ctx.arc(w - 150, h - 150, 4, 0, Math.PI * 2); ctx.fill();
+            }
+
+            // GABARIT 1 : CARTE DE VISITE
+            if (docType === "carte") {
+                drawLogo(w / 2 - 280, h / 2, 170, preset.style, themeGold, themeWhite);
+                
+                // Divider Line
+                ctx.strokeStyle = themeGold;
+                ctx.lineWidth = 2.5;
+                ctx.beginPath(); ctx.moveTo(420, 100); ctx.lineTo(420, h - 100); ctx.stroke();
+
+                const textX = 460;
+                ctx.textAlign = "left";
+
+                // Name
+                ctx.fillStyle = themeGold;
+                ctx.font = "bold 34px 'Playfair Display', Georgia, serif";
+                ctx.fillText(name, textX, h / 2 - 120);
+
+                // Role
+                ctx.fillStyle = themeWhite;
+                ctx.font = "bold 15px 'Montserrat', sans-serif";
+                ctx.fillText(role, textX, h / 2 - 65);
+
+                // Contacts
+                ctx.fillStyle = themeWhite;
+                ctx.font = "14px 'Open Sans', sans-serif";
+                ctx.fillText("Tél : " + phone, textX, h / 2 + 10);
+                ctx.fillText("Email : " + email, textX, h / 2 + 45);
+                ctx.fillStyle = colorPaleGold;
+                ctx.font = "bold 14px 'Open Sans', sans-serif";
+                ctx.fillText("Tarif : " + price, textX, h / 2 + 80);
+                ctx.fillStyle = themeWhite;
+                ctx.fillText("Bafang, Haut-Nkam, Cameroun", textX, h / 2 + 115);
+
+                // Officialization QR Code
+                drawQrCode(w - 145, h - 145, 95, `TIT-CS CERTIFIED | ${name} | ${phone}`);
+                ctx.strokeStyle = themeGold;
+                ctx.strokeRect(w - 147, h - 147, 99, 99);
+
+            // GABARIT 2 : BAPDGE PROFESSIONNEL
+            } else if (docType === "badge") {
+                // Header banner
+                ctx.fillStyle = isPrintSaver ? "#F5F5F5" : colorBlueLight;
+                ctx.fillRect(30, 30, w - 60, 150);
+                ctx.strokeStyle = themeGold;
+                ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.moveTo(30, 180); ctx.lineTo(w - 30, 180); ctx.stroke();
+
+                drawLogo(w / 2, 105, 95, preset.style, themeGold, themeWhite);
+
+                // Details
+                ctx.textAlign = "center";
+                ctx.fillStyle = themeGold;
+                ctx.font = "bold 30px 'Playfair Display', Georgia, serif";
+                ctx.fillText(name, w / 2, 235);
+
+                ctx.fillStyle = themeWhite;
+                ctx.font = "bold 13px 'Montserrat', sans-serif";
+                ctx.fillText(role.toUpperCase(), w / 2, 275);
+
+                // PRESTIGE ARCH ART DECO MASK FOR PHOTO
+                const px = w / 2 - 110;
+                const py = 320;
+                const pw = 220;
+                const ph = 260;
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(px, py + ph);
+                ctx.lineTo(px, py + 100);
+                ctx.bezierCurveTo(px, py - 10, px + pw, py - 10, px + pw, py + 100);
+                ctx.lineTo(px + pw, py + ph);
+                ctx.closePath();
+                ctx.clip();
+
+                ctx.fillStyle = "#112543";
+                ctx.fillRect(px, py, pw, ph);
+
+                if (loadedPhoto) {
+                    ctx.drawImage(loadedPhoto, px, py, pw, ph);
+                    if (!isPrintSaver) {
+                        ctx.fillStyle = "rgba(212, 175, 55, 0.15)";
+                        ctx.fillRect(px, py, pw, ph);
+                    }
+                } else {
+                    ctx.fillStyle = colorPaleGold;
+                    ctx.font = "12px 'Montserrat', sans-serif";
+                    ctx.fillText("[ CHARGER PHOTO ]", w / 2, py + ph / 2 + 20);
+                }
+                ctx.restore();
+
+                // Gold frame around the arch
+                ctx.strokeStyle = themeGold;
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(px, py + ph);
+                ctx.lineTo(px, py + 100);
+                ctx.bezierCurveTo(px, py - 10, px + pw, py - 10, px + pw, py + 100);
+                ctx.lineTo(px + pw, py + ph);
+                ctx.closePath();
+                ctx.stroke();
+
+                // ID Details
+                ctx.fillStyle = themeWhite;
+                ctx.font = "bold 14px 'Open Sans', sans-serif";
+                ctx.fillText(`ID / Matricule : ${phone}`, w / 2, 630);
+                ctx.fillText(`E-mail : ${email}`, w / 2, 660);
+                ctx.fillStyle = colorPaleGold;
+                ctx.font = "bold 16px 'Montserrat', sans-serif";
+                ctx.fillText(`AUTORISATION : ${price}`, w / 2, 705);
+
+                // QR Code
+                drawQrCode(w / 2 - 50, 750, 100, `ID:${phone}`);
+                ctx.strokeStyle = themeGold;
+                ctx.strokeRect(w / 2 - 52, 748, 104, 104);
+
+            // GABARIT 3 : DEVIS / FACTURE DE PRESTIGE (DYNAMIC TABLE & DATA-VIZ)
+            } else if (docType === "devis") {
+                // Header banner
+                ctx.fillStyle = isPrintSaver ? "#F5F5F5" : colorBlueLight;
+                ctx.fillRect(30, 30, w - 60, 180);
+                ctx.strokeStyle = themeGold;
+                ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.moveTo(30, 210); ctx.lineTo(w - 30, 210); ctx.stroke();
+
+                drawLogo(120, 120, 110, preset.style, themeGold, themeWhite);
+
+                ctx.textAlign = "left";
+                ctx.fillStyle = themeGold;
+                ctx.font = "bold 32px 'Playfair Display', Georgia, serif";
+                ctx.fillText("TIT-CONSULTING SOLUTIONS", 220, 95);
+                ctx.fillStyle = themeWhite;
+                ctx.font = "bold 12px 'Montserrat', sans-serif";
+                ctx.fillText("PROPOSITION COMMERCIALE & DEVIS DE PRESTIGE", 220, 135);
+
+                // Header details
+                ctx.fillStyle = themeWhite;
+                ctx.font = "14px 'Open Sans', sans-serif";
+                ctx.fillText(`Date d'émission : ${name}`, 60, 250);
+                ctx.fillText(`Préparé pour : M./Mme ${role}`, 60, 285);
+                ctx.fillText(`Devis Réf : ${phone}`, 60, 320);
+
+                // Table
+                const tableY = 370;
+                ctx.strokeStyle = themeGold;
+                ctx.lineWidth = 1.5;
+                
+                ctx.fillStyle = isPrintSaver ? "#EEEEEE" : "#112543";
+                ctx.fillRect(60, tableY, w - 120, 40);
+                ctx.strokeRect(60, tableY, w - 120, 40);
+                
+                ctx.fillStyle = themeGold;
+                ctx.font = "bold 13px 'Montserrat', sans-serif";
+                ctx.fillText("DESIGNATION DE LA PRESTATION", 80, tableY + 25);
+                ctx.textAlign = "center";
+                ctx.fillText("QTE", w - 240, tableY + 25);
+                ctx.fillText("P.U. (XAF)", w - 160, tableY + 25);
+                ctx.fillText("TOTAL (XAF)", w - 80, tableY + 25);
+
+                let currentY = tableY + 40;
+                let subTotal = 0;
+                
+                devisItems.forEach((item) => {
+                    const rowTotal = item.qty * item.price;
+                    subTotal += rowTotal;
+                    
+                    ctx.strokeRect(60, currentY, w - 120, 45);
+                    ctx.textAlign = "left";
+                    ctx.fillStyle = themeWhite;
+                    ctx.font = "12.5px 'Open Sans', sans-serif";
+                    
+                    if (item.label.length > 45) {
+                        ctx.fillText(item.label.substring(0, 42) + "...", 80, currentY + 22);
+                    } else {
+                        ctx.fillText(item.label, 80, currentY + 22);
+                    }
+                    
+                    ctx.textAlign = "center";
+                    ctx.fillText(item.qty, w - 240, currentY + 22);
+                    ctx.fillText(item.price.toLocaleString(), w - 160, currentY + 22);
+                    ctx.fillText(rowTotal.toLocaleString(), w - 80, currentY + 22);
+                    
+                    currentY += 45;
+                });
+
+                const tva = subTotal * 0.1925;
+                const totalTTC = subTotal + tva;
+
+                ctx.textAlign = "right";
+                ctx.fillStyle = themeWhite;
+                ctx.font = "13px 'Open Sans', sans-serif";
+                ctx.fillText(`Sous-total HT : ${subTotal.toLocaleString()} FCFA`, w - 60, currentY + 25);
+                ctx.fillText(`TVA camerounaise (19,25%) : ${Math.round(tva).toLocaleString()} FCFA`, w - 60, currentY + 45);
+                ctx.fillStyle = themeGold;
+                ctx.font = "bold 16px 'Montserrat', sans-serif";
+                ctx.fillText(`TOTAL TTC À RÉGLER : ${Math.round(totalTTC).toLocaleString()} FCFA`, w - 60, currentY + 75);
+
+                // DIGITAL SIGNATURE GENERATOR (3 COUPLÉS)
+                const sigX = w - 220;
+                const sigY = currentY + 140;
+                ctx.fillStyle = themeGold;
+                ctx.textAlign = "center";
+                ctx.font = "bold 11px 'Montserrat', sans-serif";
+                ctx.fillText("POUR LE CABINET (SIGNATURE)", sigX, sigY - 50);
+
+                // Render beautiful simulated handwritten font based on selected style
+                ctx.fillStyle = themeWhite;
+                if (sigStyle === "alex") {
+                    ctx.font = "italic 44px 'Alex Brush', cursive";
+                } else if (sigStyle === "dancing") {
+                    ctx.font = "bold 32px 'Dancing Script', cursive";
+                } else {
+                    ctx.font = "italic 40px 'Great Vibes', cursive";
+                }
+                ctx.fillText(signatory, sigX, sigY);
+                
+                // Cryptographic token
+                ctx.fillStyle = colorPaleGold;
+                ctx.font = "9px 'Open Sans', sans-serif";
+                ctx.fillText(`ID Signataire : TIT-CS_AUTH_#89FA`, sigX, sigY + 30);
+
+                // DATA-VIZ PERFORMANCE GRAPH (ROI)
+                const graphY = currentY + 110;
+                ctx.strokeStyle = themeGold;
+                ctx.lineWidth = 1;
+                ctx.strokeRect(60, graphY, w - 400, 220); // Border
+                
+                ctx.fillStyle = isPrintSaver ? "#EEEEEE" : "#112543";
+                ctx.fillRect(60, graphY, w - 400, 35);
+                ctx.strokeRect(60, graphY, w - 400, 35);
+                
+                ctx.textAlign = "left";
+                ctx.fillStyle = themeGold;
+                ctx.font = "bold 11px 'Montserrat', sans-serif";
+                ctx.fillText("ASSISTANT GRAPHIOUE DE RENTABILITÉ (ROI ESTIMÉ)", 80, graphY + 22);
+
+                const chartLeft = 140;
+                const chartTop = graphY + 60;
+                const chartWidth = 400;
+                const chartHeight = 120;
+
+                ctx.strokeStyle = themeGold;
+                ctx.lineWidth = 1.5;
+                ctx.beginPath(); ctx.moveTo(chartLeft, chartTop); ctx.lineTo(chartLeft, chartTop + chartHeight); ctx.lineTo(chartLeft + chartWidth, chartTop + chartHeight); ctx.stroke();
+
+                const barData = [
+                    { label: "Sans TIT-CS", h: 30, color: "#D9534F" },
+                    { label: "Avec TIT-CS (An 1)", h: 75, color: colorPaleGold },
+                    { label: "Avec TIT-CS (An 2)", h: 110, color: themeGold }
+                ];
+
+                barData.forEach((bar, idx) => {
+                    const bx = chartLeft + 40 + idx * 110;
+                    const by = chartTop + chartHeight - bar.h;
+                    
+                    ctx.fillStyle = bar.color;
+                    ctx.fillRect(bx, by, 50, bar.h);
+                    ctx.strokeRect(bx, by, 50, bar.h);
+
+                    ctx.fillStyle = themeWhite;
+                    ctx.font = "9px 'Montserrat', sans-serif";
+                    ctx.textAlign = "center";
+                    ctx.fillText(bar.label, bx + 25, chartTop + chartHeight + 15);
+                });
+
+                // Footer
+                ctx.fillStyle = isPrintSaver ? "#EEEEEE" : colorBlueLight;
+                ctx.fillRect(30, h - 130, w - 60, 100);
+                ctx.strokeStyle = themeGold;
+                ctx.lineWidth = 1.5;
+                ctx.beginPath(); ctx.moveTo(30, h - 130); ctx.lineTo(w - 30, h - 130); ctx.stroke();
+
+                ctx.textAlign = "center";
+                ctx.fillStyle = colorPaleGold;
+                ctx.font = "10px 'Montserrat', sans-serif";
+                ctx.fillText("TIT-CS  |  Bafang, Haut-Nkam, Cameroun  |  Tél: +237 6 95 51 25 28  |  Mode de paiement : MTN MoMo / Orange Money", w/2, h - 75);
+
+            // GABARIT 4 : LETTRE ADMINISTRATIVE
+            } else if (docType === "lettre") {
+                ctx.fillStyle = isPrintSaver ? "#F5F5F5" : colorBlueLight;
+                ctx.fillRect(30, 30, w - 60, 150);
+                ctx.strokeStyle = themeGold;
+                ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.moveTo(30, 180); ctx.lineTo(w - 30, 180); ctx.stroke();
+
+                drawLogo(120, 105, 95, preset.style, themeGold, themeWhite);
+
+                ctx.textAlign = "left";
+                ctx.fillStyle = themeGold;
+                ctx.font = "bold 26px 'Playfair Display', Georgia, serif";
+                ctx.fillText("TIT-CONSULTING SOLUTIONS", 210, 85);
+                ctx.fillStyle = themeWhite;
+                ctx.font = "bold 10px 'Montserrat', sans-serif";
+                ctx.fillText("« UNE INTELLIGENCE, MILLE SOLUTIONS »", 210, 120);
+
+                ctx.textAlign = "right";
+                ctx.fillStyle = themeWhite;
+                ctx.font = "10px 'Open Sans', sans-serif";
+                ctx.fillText("Bafang, Cameroun\n+237 6 95 51 25 28\ncontact@tit-cs.com", w - 80, 75);
+
+                ctx.textAlign = "left";
+                ctx.fillStyle = colorPaleGold;
+                ctx.font = "bold 16px 'Open Sans', sans-serif";
+                ctx.fillText("Bafang, le " + name, 70, 280);
+
+                ctx.fillStyle = themeWhite;
+                ctx.font = "16px 'Open Sans', sans-serif";
+                ctx.fillText("À l'attention de M./Mme : " + role, 70, 340);
+                ctx.fillStyle = colorPaleGold;
+                ctx.fillText("Objet : " + phone, 70, 395);
+
+                let bodyY = 460;
+                const lines = [
+                    "Monsieur, Madame,",
+                    "Nous avons l'honneur de vous soumettre cette correspondance d'affaires au nom",
+                    "de notre cabinet de conseil d'affaires, de génie logiciel et de compliance.",
+                    "Grâce à notre architecture d'ingénierie et nos 12 agents d'Intelligence Artificielle d'élite,",
+                    "nous vous garantissons des développements de logiciels de gestion et d'outils Excel",
+                    "automatisés d'un niveau d'excellence et de rigueur internationale, à coût maîtrisé.",
+                    "Restant à votre entière disposition,",
+                    "Le Prince Joël NOUBISSIE TCHASSOM, Président PPDG (PPDG)."
+                ];
+                ctx.fillStyle = themeWhite;
+                for (let line of lines) {
+                    ctx.fillText(line, 70, bodyY);
+                    bodyY += 35;
+                }
+
+                // Officialization Signature Block & Sceau QR Code
+                const sigX = w - 220;
+                const sigY = h - 280;
+                ctx.fillStyle = themeGold;
+                ctx.textAlign = "center";
+                ctx.font = "bold 12px 'Montserrat', sans-serif";
+                ctx.fillText("LE SIGNATAIRE (TIT-CS)", sigX, sigY - 50);
+
+                ctx.fillStyle = themeWhite;
+                if (sigStyle === "alex") {
+                    ctx.font = "italic 44px 'Alex Brush', cursive";
+                } else if (sigStyle === "dancing") {
+                    ctx.font = "bold 32px 'Dancing Script', cursive";
+                } else {
+                    ctx.font = "italic 40px 'Great Vibes', cursive";
+                }
+                ctx.fillText(signatory, sigX, sigY);
+                ctx.fillStyle = colorPaleGold;
+                ctx.font = "9px 'Open Sans', sans-serif";
+                ctx.fillText(`ID Signataire : TIT-CS_AUTH_#89FA`, sigX, sigY + 30);
+
+                // QR Code
+                drawQrCode(60, h - 340, 110, `TIT-CS_VERIFICATION_HASH_XXXX`);
+                ctx.strokeStyle = themeGold;
+                ctx.strokeRect(57, h - 343, 116, 116);
+
+                // Footer
+                ctx.fillStyle = isPrintSaver ? "#EEEEEE" : colorBlueLight;
+                ctx.fillRect(30, h - 150, w - 60, 120);
+                ctx.strokeStyle = themeGold;
+                ctx.lineWidth = 1.5;
+                ctx.beginPath(); ctx.moveTo(30, h - 150); ctx.lineTo(w - 30, h - 150); ctx.stroke();
+
+                ctx.textAlign = "center";
+                ctx.fillStyle = colorPaleGold;
+                ctx.font = "11px 'Montserrat', sans-serif";
+                ctx.fillText("TIT-CS  |  Bafang, Haut-Nkam, Cameroun  |  Tél: +237 6 95 51 25 28", w/2, h - 85);
+
+            // GABARIT 5 : CARTE D'INVITATION
+            } else if (docType === "invitation") {
+                drawLogo(w / 2, 130, 100, preset.style, themeGold, themeWhite);
+
+                ctx.textAlign = "center";
+                ctx.fillStyle = themeGold;
+                ctx.font = "bold 32px 'Playfair Display', Georgia, serif";
+                ctx.fillText("CARTE D'INVITATION DE PRESTIGE", w / 2, 230);
+
+                ctx.fillStyle = themeWhite;
+                ctx.font = "bold 13px 'Montserrat', sans-serif";
+                ctx.fillText("L'EXCELLENCE DE L'INTELLIGENCE AUGMENTÉE À L'HONNEUR", w / 2, 265);
+
+                ctx.strokeStyle = themeGold;
+                ctx.lineWidth = 1.5;
+                ctx.beginPath(); ctx.moveTo(w / 2 - 250, 290); ctx.lineTo(w / 2 + 250, 290); ctx.stroke();
+
+                ctx.fillStyle = colorPaleGold;
+                ctx.font = "bold 26px 'Playfair Display', Georgia, serif";
+                ctx.fillText(name, w / 2, 350);
+
+                ctx.fillStyle = themeWhite;
+                ctx.font = "16px 'Open Sans', sans-serif";
+                ctx.fillText(`Est cordialement invité(e) à participer à la réception d'affaires :`, w / 2, 400);
+                
+                ctx.fillStyle = themeGold;
+                ctx.font = "bold 20px 'Montserrat', sans-serif";
+                ctx.fillText(role.toUpperCase(), w / 2, 440);
+
+                ctx.fillStyle = themeWhite;
+                ctx.font = "15px 'Open Sans', sans-serif";
+                ctx.fillText(`Date & Heure : ${phone}`, w / 2, 490);
+                ctx.fillText(`Lieu : ${email}`, w / 2, 530);
+
+                ctx.fillStyle = colorPaleGold;
+                ctx.font = "italic 14px 'Playfair Display', Georgia, serif";
+                ctx.fillText(`Note d'affaires : ${price}`, w / 2, 580);
+            }
+
+            // Draw custom drawn user shapes from the tool palette
+            drawingObjects.forEach(obj => obj.draw());
+
+            // Update Viewport Info text
+            document.getElementById('canvasInfo').textContent = `Gabarit : ${docType.toUpperCase()} | Format : ${activeFormat.label} | DPI d'impression : 300`;
+        }
+
+        // Draw Art Deco corners
+        function drawArtDecoCorner(cx, cy, size, corner, color) {
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 1.5;
+            
+            let dx = (corner === "tr" || corner === "br") ? -1 : 1;
+            let dy = (corner === "bl" || corner === "br") ? -1 : 1;
+            
+            ctx.beginPath();
+            ctx.moveTo(cx, cy + size * dy);
+            ctx.lineTo(cx, cy);
+            ctx.lineTo(cx + size * dx, cy);
+            ctx.stroke();
+            
+            ctx.strokeStyle = colorPaleGold;
+            ctx.lineWidth = 0.5;
+            ctx.beginPath();
+            ctx.moveTo(cx + 8 * dx, cy + size * dy * 0.8);
+            ctx.lineTo(cx + 8 * dx, cy + 8 * dy);
+            ctx.lineTo(cx + size * dx * 0.8, cy + 8 * dy);
+            ctx.stroke();
+        }
+
+        // QR Code helper
+        function drawQrCode(x, y, size, data) {
+            const qrCanvas = document.createElement('canvas');
+            const qr = new QRious({
+                element: qrCanvas,
+                value: data,
+                size: size,
+                background: colorBlueDark,
+                foreground: colorGold
+            });
+            ctx.drawImage(qrCanvas, x, y, size, size);
+        }
+
+        // Save local profile
+        btnSaveDB.addEventListener('click', () => {
+            const name = inputName.value;
+            const role = inputRole.value;
+            const phone = inputPhone.value;
+            const email = inputEmail.value;
+            const price = inputPrice.value;
+
+            const profiles = JSON.parse(localStorage.getItem('tit_cs_profiles') || '[]');
+            profiles.push({ name, role, phone, email, price });
+            localStorage.setItem('tit_cs_profiles', JSON.stringify(profiles));
+            
+            alert("Profil d'affaires enregistré en local !");
+            loadLocalProfiles();
+        });
+
+        // Delete profile
+        btnDeleteProfile.addEventListener('click', () => {
+            const val = selectProfile.value;
+            if (val === "") {
+                alert("Sélectionnez d'abord un profil à supprimer.");
+                return;
+            }
+            if (confirm("Supprimer ce profil définitivement ?")) {
+                const profiles = JSON.parse(localStorage.getItem('tit_cs_profiles') || '[]');
+                profiles.splice(parseInt(val), 1);
+                localStorage.setItem('tit_cs_profiles', JSON.stringify(profiles));
+                loadLocalProfiles();
+                drawCanvas();
+            }
+        });
+
+        function loadLocalProfiles() {
+            const profiles = JSON.parse(localStorage.getItem('tit_cs_profiles') || '[]');
+            selectProfile.innerHTML = '<option value="" disabled selected>Sélectionnez un profil...</option>';
+            profiles.forEach((p, idx) => {
+                const opt = document.createElement('option');
+                opt.value = idx;
+                opt.textContent = `${p.name} (${p.role})`;
+                selectProfile.appendChild(opt);
+            });
+        }
+
+        selectProfile.addEventListener('change', (e) => {
+            const profiles = JSON.parse(localStorage.getItem('tit_cs_profiles') || '[]');
+            const p = profiles[e.target.value];
+            if (p) {
+                inputName.value = p.name;
+                inputRole.value = p.role;
+                inputPhone.value = p.phone;
+                inputEmail.value = p.email;
+                inputPrice.value = p.price || "";
+                drawCanvas();
+            }
+        });
+
+        // Bootstrapping listeners
+        [inputName, inputRole, inputPhone, inputEmail, inputPrice, inputSignatory, signatureStyleSelect].forEach(el => {
+            el.addEventListener('input', drawCanvas);
+        });
+
+        // Initialize Devis Items
+        function buildDevisItemInputs() {
+            devisItemsContainer.innerHTML = "";
+            devisItems.forEach((item, idx) => {
+                const row = document.createElement('div');
+                row.className = "devis-item-row";
+                
+                const inputLabel = document.createElement('input');
+                inputLabel.type = "text";
+                inputLabel.value = item.label;
+                inputLabel.addEventListener('input', (e) => {
+                    devisItems[idx].label = e.target.value;
+                    drawCanvas();
+                });
+                
+                const inputQty = document.createElement('input');
+                inputQty.type = "number";
+                inputQty.value = item.qty;
+                inputQty.addEventListener('input', (e) => {
+                    devisItems[idx].qty = parseInt(e.target.value) || 0;
+                    drawCanvas();
+                });
+                
+                const inputPriceVal = document.createElement('input');
+                inputPriceVal.type = "number";
+                inputPriceVal.value = item.price;
+                inputPriceVal.addEventListener('input', (e) => {
+                    devisItems[idx].price = parseFloat(e.target.value) || 0;
+                    drawCanvas();
+                });
+
+                row.appendChild(inputLabel);
+                row.appendChild(inputQty);
+                row.appendChild(inputPriceVal);
+                devisItemsContainer.appendChild(row);
+            });
+        }
+
+        btnAddDevisItem.addEventListener('click', () => {
+            devisItems.push({ label: "Nouveau service d'IA personnalisé", qty: 1, price: 50000 });
+            buildDevisItemInputs();
+            drawCanvas();
+        });
+
+        // PNG & PDF Export triggers
+        btnExportPNG.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = `TIT_CS_${docTypeSelect.value.toUpperCase()}_${inputName.value.replace(/\s+/g, '_')}.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        });
+
+        btnExportPDF.addEventListener('click', () => {
+            const { jsPDF } = window.jspdf;
+            const docType = docTypeSelect.value;
+            const formats = formatsConfig[docType] || formatsConfig["carte"];
+            const activeFormat = formats.find(f => f.id === docFormatSelect.value) || formats[0];
+
+            const doc = new jsPDF({
+                orientation: (docType === "carte" || docType === "invitation") ? "landscape" : "portrait",
+                unit: "px",
+                format: [activeFormat.w, activeFormat.h]
+            });
+
+            const dataUrl = canvas.toDataURL("image/png");
+            doc.addImage(dataUrl, 'PNG', 0, 0, activeFormat.w, activeFormat.h);
+            doc.save(`TIT_CS_${docType.toUpperCase()}_${inputName.value.replace(/\s+/g, '_')}.pdf`);
+        });
+
+        // Launch app
+        loadFormatsForDocType();
+        buildDevisItemInputs();
+        loadLocalProfiles();
+    </script>
+</body>
+</html>

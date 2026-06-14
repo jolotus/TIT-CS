@@ -1,0 +1,16 @@
+{
+  "name": "TIT-CS Universal Document Generator",
+  "short_name": "TIT-CS Gen",
+  "description": "Générateur Universel de Supports et Documents d'affaires de prestige pour TIT-CS.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0A1F3D",
+  "theme_color": "#0A1F3D",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><rect width='200' height='200' fill='%230A1F3D' rx='20'/><polygon points='100,20 170,60 170,140 100,180 30,140 30,60' fill='none' stroke='%23D4AF37' stroke-width='3'/><text x='100' y='120' font-family='Georgia' font-size='50' fill='%23D4AF37' text-anchor='middle'>TIT</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ]
+}

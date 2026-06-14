@@ -1,0 +1,75 @@
+# ⚙️ CONFIGURATION DECAP CMS — TIT-CONSULTING SOLUTIONS (TIT-CS)
+
+# Utilisation de la passerelle Netlify Git Gateway pour une authentification 100% gratuite
+backend:
+  name: git-gateway
+  branch: main # Branche de production pour mettre à jour automatiquement GitHub
+
+# Répertoire de stockage local des images du site
+media_folder: "assets/images"
+public_folder: "/assets/images"
+
+# Configuration de la marque du CMS
+site_url: "https://tit-cs.netlify.app"
+display_url: "https://tit-cs.netlify.app"
+logo_url: "https://tit-cs.netlify.app/generator_pwa/manifest.json"
+
+# Collections d'administration gérées par l'interface CMS
+collections:
+  
+  # COLLECTION 1 : CONFIGURATIONS GÉNÉRALES DU CABINET (Slogan, Contacts, Siège)
+  - name: "config"
+    label: "Configuration Générale"
+    delete: false # Sécurité pour éviter la suppression accidentelle
+    editor:
+      preview: false
+    files:
+      - name: "settings"
+        label: "Paramètres Globaux"
+        file: "source_code/data/settings.json"
+        fields:
+          - { label: "Slogan de Marque", name: "slogan", widget: "string", default: "« Une intelligence, mille solutions. »" }
+          - { label: "Adresse physique", name: "address", widget: "string", default: "Bafang, Haut-Nkam, Région de l'Ouest, Cameroun" }
+          - { label: "Téléphone Principal (WhatsApp)", name: "phone_primary", widget: "string", default: "+237 695 51 25 28" }
+          - { label: "Téléphone Secondaire", name: "phone_secondary", widget: "string", default: "+237 682 58 09 45" }
+          - { label: "Téléphone Administration (DAG)", name: "phone_admin", widget: "string", default: "+237 696 48 11 65" }
+          - { label: "E-mail de contact", name: "email", widget: "string", default: "contact@tit-cs.com" }
+
+  # COLLECTION 2 : LES MEMBRES DE L'ÉQUIPE ET LEURS POSTES
+  - name: "team"
+    label: "Profils de l'Équipe"
+    folder: "source_code/data/team"
+    create: true # Possibilité de rajouter de nouveaux collaborateurs ou agents d'IA
+    slug: "{{fields.name}}"
+    fields:
+      - { label: "Nom Complet", name: "name", widget: "string" }
+      - { label: "Poste / Rôle d'affaires", name: "role", widget: "string" }
+      - { label: "Téléphone direct", name: "phone", widget: "string" }
+      - { label: "E-mail professionnel", name: "email", widget: "string" }
+      - { label: "Photo de profil", name: "photo", widget: "image", required: false }
+      - { label: "Collaborateur Actif ?", name: "is_active", widget: "boolean", default: true }
+
+  # COLLECTION 3 : LES PÔLES ET TARIFS DES SERVICES D'IA
+  - name: "services"
+    label: "Pôles & Tarifs Services d'IA"
+    folder: "source_code/data/services"
+    create: true
+    slug: "{{fields.agent_name}}"
+    fields:
+      - { label: "Nom de l'Agent d'IA", name: "agent_name", widget: "string", hint: "Ex : APPCRAFT, STRATEGOS..." }
+      - { label: "Label du Service", name: "service_label", widget: "string" }
+      - { label: "Tarif minimal (FCFA)", name: "price_xaf", widget: "number", value_type: "int" }
+      - { label: "Description détaillée des prestations", name: "description", widget: "text" }
+
+  # COLLECTION 4 : BLOG & ARTICLES À THÈMES LOCAUX
+  - name: "blog"
+    label: "Articles de Blog (Sujets d'Impact)"
+    folder: "source_code/data/blog"
+    create: true
+    slug: "{{fields.title}}"
+    fields:
+      - { label: "Titre de l'article", name: "title", widget: "string" }
+      - { label: "Date de publication", name: "date", widget: "datetime" }
+      - { label: "Image d'illustration", name: "image", widget: "image", required: false }
+      - { label: "Résumé de l'article", name: "summary", widget: "text" }
+      - { label: "Corps de l'article (Markdown)", name: "body", widget: "markdown" }
