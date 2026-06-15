@@ -1,0 +1,7 @@
+{
+  "id": "qr_badge_maker",
+  "name": "Badge Maker QR Code local",
+  "version": "v2.0.1",
+  "description": "Génère des badges d'ID d'affaires et de sécurité avec masque photo en arche d'or et vCard cryptée hors-ligne.",
+  "installed": true
+}

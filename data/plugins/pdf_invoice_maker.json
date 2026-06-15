@@ -1,0 +1,7 @@
+{
+  "id": "pdf_invoice_maker",
+  "name": "Générateur Factures PDF Premium",
+  "version": "v1.2.0",
+  "description": "Permet de générer des factures PDF d'affaires de prestige avec signature cursive d'or directement depuis le CMS.",
+  "installed": true
+}

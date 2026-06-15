@@ -1,0 +1,7 @@
+{
+  "id": "sms_notification_gateway",
+  "name": "Passerelle SMS Locale MTN/Orange",
+  "version": "v1.0.0",
+  "description": "Envoie des alertes de confirmation de devis et factures directement par SMS aux clients du Cameroun (0 FCFA d'internet).",
+  "installed": false
+}

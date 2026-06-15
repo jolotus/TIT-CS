@@ -3,11 +3,226 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TIT-CS — Tableau de Bord d'Administration (CMS)</title>
-  <!-- Inclusion de la bibliothèque Decap CMS -->
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <title>TIT-CS — Espace d'Administration &amp; CMS de Prestige</title>
+  
+  <!-- Netlify Identity Widget (Crucial for admin login) -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;family=Open+Sans:wght@400;600&amp;display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #0A1F3D;
+      --primary-light: #142A52;
+      --gold: #D4AF37;
+      --gold-pale: #E8C77E;
+      --white: #F5F5F5;
+      --dark: #051021;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: var(--dark);
+      color: var(--white);
+      margin: 0;
+      padding: 0;
+    }
+
+    /* TOP CMS NAVIGATION HEADER */
+    .admin-header {
+      background-color: var(--primary);
+      border-bottom: 2px solid var(--gold);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .brand-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      color: var(--gold);
+      font-size: 16px;
+      letter-spacing: 1px;
+    }
+
+    .admin-main {
+      display: flex;
+      height: calc(100vh - 54px);
+    }
+
+    /* MARKETPLACE SIDEBAR */
+    .market-sidebar {
+      width: 320px;
+      background-color: var(--primary);
+      border-right: 1.5px solid rgba(212, 175, 55, 0.2);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      overflow-y: auto;
+    }
+
+    .sidebar-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: bold;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      border-bottom: 1.5px solid rgba(212, 175, 55, 0.2);
+      padding-bottom: 5px;
+    }
+
+    .plugin-card {
+      background-color: var(--primary-light);
+      border: 1px solid rgba(245, 245, 245, 0.1);
+      border-radius: 6px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .plugin-card:hover {
+      border-color: var(--gold);
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.1);
+    }
+
+    .plugin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .plugin-name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: bold;
+      color: var(--white);
+    }
+
+    .plugin-version {
+      font-size: 9px;
+      color: var(--gold-pale);
+      background-color: var(--primary);
+      padding: 2px 6px;
+      border-radius: 10px;
+    }
+
+    .plugin-desc {
+      font-size: 11px;
+      color: #888;
+      line-height: 1.4;
+    }
+
+    .toggle-btn {
+      background-color: var(--gold);
+      color: var(--primary);
+      border: none;
+      padding: 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+      width: 100%;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .toggle-btn.active {
+      background-color: transparent;
+      color: #D9534F;
+      border: 1.5px solid #D9534F;
+    }
+
+    .cms-iframe-container {
+      flex: 1;
+      height: 100%;
+      background-color: var(--dark);
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
 </head>
 <body>
-  <!-- Decap CMS s'injecte de manière autonome ici -->
+
+  <!-- ADMIN NAVIGATION HEADER -->
+  <div class="admin-header">
+    <div class="brand-title">TIT-CS — COCKPIT D'ADMINISTRATION &amp; EXTENSIONS</div>
+    <div style="font-size: 11px; color: var(--gold-pale); font-family: 'Montserrat';">RESTAURATION LOCAL · ACCÈS EXCLUSIF</div>
+  </div>
+
+  <div class="admin-main">
+    <!-- EXTENSIONS & PLUGINS SIDEBAR -->
+    <div class="market-sidebar">
+      <div class="sidebar-title">Générateur PWA d'affaires</div>
+      <a href="generator_pwa/index.html" target="cms_frame" class="toggle-btn" style="text-decoration: none; padding: 10px; margin-bottom: 10px;">📐 Ouvrir le Générateur</a>
+
+      <div class="sidebar-title">Marketplace d'Extensions</div>
+      
+      <!-- PLUGIN 1 -->
+      <div class="plugin-card">
+        <div class="plugin-header">
+          <span class="plugin-name">Factures PDF Premium</span>
+          <span class="plugin-version">v1.2.0</span>
+        </div>
+        <p class="plugin-desc">Générateur de factures PDF d'affaires avec insertion automatique de signatures de prestige et de sceaux cryptographiques.</p>
+        <button class="toggle-btn" id="btnPlug1" onclick="togglePlugin('btnPlug1')">Installé ✓</button>
+      </div>
+
+      <!-- PLUGIN 2 -->
+      <div class="plugin-card">
+        <div class="plugin-header">
+          <span class="plugin-name">Badge Maker local</span>
+          <span class="plugin-version">v2.0.1</span>
+        </div>
+        <p class="plugin-desc">Conception de badges d'affaires avec masquage photo en arche Art Déco d'or métallique et codes QR hors-ligne.</p>
+        <button class="toggle-btn" id="btnPlug2" onclick="togglePlugin('btnPlug2')">Installé ✓</button>
+      </div>
+
+      <!-- PLUGIN 3 -->
+      <div class="plugin-card">
+        <div class="plugin-header">
+          <span class="plugin-name">Passerelle SMS Locale</span>
+          <span class="plugin-version">v1.0.0</span>
+        </div>
+        <p class="plugin-desc">Permet d'envoyer des notifications SMS de relance et de confirmation de devis aux clients au Cameroun (MTN/Orange).</p>
+        <button class="toggle-btn active" id="btnPlug3" onclick="togglePlugin('btnPlug3')">Installer</button>
+      </div>
+    </div>
+
+    <!-- MAIN DECAP CMS IFRAME (LOOPS INTERNALLY) -->
+    <div class="cms-iframe-container">
+      <!-- Decap CMS container can run here inside a dynamic element or an iframe -->
+      <div id="nc-root"></div>
+    </div>
+  </div>
+
+  <!-- Decap CMS Core Script -->
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+  <script>
+    function togglePlugin(id) {
+        const btn = document.getElementById(id);
+        if (btn.textContent.includes("Installé")) {
+            btn.textContent = "Installer";
+            btn.classList.add("active");
+            alert("Extension désinstallée avec succès en local.");
+        } else {
+            btn.textContent = "Installé ✓";
+            btn.classList.remove("active");
+            alert("Extension installée avec succès ! Ses fonctionnalités d'affaires sont désormais actives.");
+        }
+    }
+  </script>
 </body>
 </html>

@@ -1,0 +1,8 @@
+{
+  "id": "8",
+  "title": "Les Modèles de Langage (LLM) Locaux et Offline pour les Administrations",
+  "date": "27 Avril 2026",
+  "summary": "Faire tourner des serveurs d'IA locaux sur des postes de travail physiques pour préserver le secret professionnel et la sécurité des données.",
+  "image": "assets/images/blog_offline_llm.png",
+  "body": "### Introduction\\nEnvoyer les données sensibles de votre étude de notaire ou de votre administration sur des serveurs cloud étrangers pose un risque de souveraineté majeur. TIT-CS installe et configure des modèles de langage (LLM) open-source performants s'exécutant à 100% localement sur vos propres ordinateurs de bureau physically, garantissant une confidentialité absolue de vos correspondances."
+}

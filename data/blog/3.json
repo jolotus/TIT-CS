@@ -1,0 +1,8 @@
+{
+  "id": "3",
+  "title": "Souveraineté Numérique & Zéro-Papier au Cameroun",
+  "date": "01 Juin 2026",
+  "summary": "Analyse de la transition documentaire sécurisée par chiffrement local pour les études de notaires, cliniques médicales et administrations publiques de l'Ouest.",
+  "image": "assets/images/blog_souverainete.png",
+  "body": "### Introduction\\nPour les structures administratives et médicales, la perte ou l'altération de documents physiques est un risque d'affaires majeur. La transition vers le **Zéro-Papier** proposée par TIT-CS résout ce problème en garantissant une souveraineté numérique totale. Nous numérisons, classons par indexation d'IA intelligente, et stockons vos fichiers dans un coffre-fort numérique local sécurisé par chiffrement robuste (Ed25519), inaccessible aux cybermenaces mondiales."
+}

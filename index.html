@@ -946,6 +946,70 @@
             letter-spacing: 1px;
         }
     
+
+        /* NATIVE CSS 3D SPINNING NETWORK */
+        .network-3d-container {
+            width: 100%;
+            height: 320px;
+            perspective: 800px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background: radial-gradient(circle, var(--primary-light) 0%, var(--black-elegant) 100%);
+            border: 2px solid var(--gold);
+            border-radius: 6px;
+            margin-top: 30px;
+            position: relative;
+        }
+        .network-3d-node {
+            width: 140px;
+            height: 140px;
+            position: absolute;
+            transform-style: preserve-3d;
+            animation: rotate3d 12s infinite linear;
+        }
+        .node-face {
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            border: 1.5px solid var(--gold);
+            opacity: 0.85;
+            background: rgba(10, 31, 61, 0.4);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            font-size: 14px;
+            color: var(--gold-pale);
+        }
+        /* Positions of 3D Cube faces representing IA, Networks, Security, and Code */
+        .face-front  { transform: translateZ(70px); }
+        .face-back   { transform: rotateY(180deg) translateZ(70px); }
+        .face-left   { transform: rotateY(-90deg) translateZ(70px); }
+        .face-right  { transform: rotateY(90deg) translateZ(70px); }
+        .face-top    { transform: rotateX(90deg) translateZ(70px); }
+        .face-bottom { transform: rotateX(-90deg) translateZ(70px); }
+
+        @keyframes rotate3d {
+            0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+            100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg); }
+        }
+
+        /* SVG GEOMETRIC GLOWING NETWORK UNDERLAYS */
+        .glowing-circuits-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+    
         /* FLOATING WHATSAPP FAB */
         .whatsapp-fab {
             position: fixed;
@@ -973,6 +1037,8 @@
         }
     
     </style>
+    <!-- NETLIFY IDENTITY WIDGET FOR CMS AUTHENTICATION -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
 
@@ -1037,6 +1103,22 @@
                         <path d="M 250 268 L 250 300" stroke="#F4D67A" stroke-width="2" />
                     </g>
                 </svg>
+                
+                <!-- NATIVE CSS 3D SPINNING COGNITIVE CUBE -->
+                <div class="network-3d-container">
+                    <svg class="glowing-circuits-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                        <path d="M10 10 L30 10 L50 30 L50 70 L70 90" stroke="#D4AF37" stroke-width="0.5" fill="none" />
+                        <circle cx="70" cy="90" r="2" fill="#D4AF37" />
+                    </svg>
+                    <div class="network-3d-node">
+                        <div class="node-face face-front">APPCRAFT</div>
+                        <div class="node-face face-back">STRATEGOS</div>
+                        <div class="node-face face-left">VIGILEYE</div>
+                        <div class="node-face face-right">NETCOM</div>
+                        <div class="node-face face-top">PLUMEX</div>
+                        <div class="node-face face-bottom">TIT-CS</div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -1519,7 +1601,7 @@
         });
     </script>
     <!-- FLOATING WHATSAPP ACTION BUTTON -->
-    <a href="https://wa.me/237682580945" class="whatsapp-fab" target="_blank" title="Chattez avec nous sur WhatsApp">🟢 Chattez sur WhatsApp</a>
+    <a href="https://wa.me/237695512528" class="whatsapp-fab" target="_blank" title="Chattez avec nous sur WhatsApp">🟢 Chattez sur WhatsApp</a>
 
     <!-- TIT-CS INTELLIGENT CHATBOT WIDGET -->
     <div id="titChatbot" class="chatbot-container">
@@ -1747,6 +1829,165 @@
                 box.scrollTop = box.scrollHeight;
             }, 800);
         }
+    </script>
+    
+
+    <!-- NETLIFY IDENTITY INVITE REDIRECT HANDLER -->
+    <script>
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", user => {
+          if (!user) {
+            window.netlifyIdentity.on("login", () => {
+              document.location.href = "/admin/";
+            });
+          }
+        });
+      }
+    </script>
+
+    <!-- DYNAMIC BLOG POSTS SCHEDULER & ILLUSTRATED SVG GENERATOR -->
+    <script>
+        const blogContainer = document.querySelector('#blog .blog-grid');
+        
+        // Local 10 Scientific and Tech Reviews Database
+        const localArticles = [
+            {
+                title: "L'IA au cœur du développement des PME du Haut-Nkam",
+                category: "Impact PME",
+                summary: "Comment l'intégration d'outils d'Intelligence Artificielle et d'applications Excel automatisées d'élite permet de diviser le temps de gestion par 3 et d'optimiser les marges bénéficiaires des micro-commerces à Bafang.",
+                icon: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#D4AF37" stroke-width="2">
+                        <rect x="6" y="6" width="36" height="36" rx="4" />
+                        <line x1="12" y1="18" x2="36" y2="18" />
+                        <line x1="12" y1="26" x2="28" y2="26" />
+                        <line x1="12" y1="34" x2="20" y2="34" />
+                       </svg>`
+            },
+            {
+                title: "Algorithmes de Tontines Numériques en zone CEMAC",
+                category: "Épargne locale",
+                summary: "Sécurisation de l'épargne associative bamiléké grâce aux outils de base de données locales cryptées et aux sceaux d'officialisation QR Code offline.",
+                icon: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#D4AF37" stroke-width="2">
+                        <circle cx="24" cy="24" r="18" />
+                        <path d="M18 20 C18 16 30 16 30 20 C30 24 18 24 18 28 C18 32 30 32 30 28" />
+                        <line x1="24" y1="12" x2="24" y2="36" />
+                       </svg>`
+            },
+            {
+                title: "Souveraineté Numérique & Zéro-Papier au Cameroun",
+                category: "Souveraineté",
+                summary: "Analyse de la transition documentaire sécurisée par chiffrement local pour les études de notaires, cliniques médicales et administrations publiques de l'Ouest.",
+                icon: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#D4AF37" stroke-width="2">
+                        <path d="M12 4 L28 4 L38 14 L38 44 L12 44 Z" />
+                        <path d="M28 4 L28 14 L38 14" />
+                        <circle cx="25" cy="28" r="4" />
+                        <path d="M25 32 L25 38" />
+                       </svg>`
+            },
+            {
+                title: "Optimisation des Réponses aux Appels d'Offres d'État (TIT-ACP)",
+                category: "Commande Publique",
+                summary: "L'importance stratégique de l'automatisation du montage de DAO et du calcul des intérêts moratoires pour sécuriser la trésorerie des PME du BTP.",
+                icon: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#D4AF37" stroke-width="2">
+                        <path d="M8 8 L32 8 L40 16 L40 40 L8 40 Z" />
+                        <line x1="14" y1="16" x2="26" y2="16" />
+                        <line x1="14" y1="24" x2="34" y2="24" />
+                        <line x1="14" y1="32" x2="28" y2="32" />
+                       </svg>`
+            },
+            {
+                title: "Sécurité Publique Prédictive & PC de Crise avec VIGILEYE",
+                category: "VIGILEYE",
+                summary: "Déploiement de réseaux de caméras IP solaires intelligentes et liaisons radio de secours pour protéger les chantiers et résidences de l'Ouest.",
+                icon: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#D4AF37" stroke-width="2">
+                        <path d="M6 14 L30 14 L42 24 L30 34 L6 34 Z" />
+                        <circle cx="18" cy="24" r="4" />
+                        <line x1="30" y1="24" x2="6" y2="24" />
+                       </svg>`
+            },
+            {
+                title: "IA & Modernisation Agricole avec TIT-AgriPilote",
+                category: "TIT-AgriPilote",
+                summary: "Comment notre solution d'IA agricole permet de planifier la production animale et de prévoir les prix du marché local pour les éleveurs du Haut-Nkam.",
+                icon: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#D4AF37" stroke-width="2">
+                        <path d="M10 38 L14 18 L24 24 L28 10 L38 38 Z" />
+                        <circle cx="14" cy="18" r="2" />
+                        <circle cx="28" cy="10" r="2" />
+                        <line x1="6" y1="38" x2="42" y2="38" />
+                       </svg>`
+            },
+            {
+                title: "L'Interconnexion Cryptée des PC de Crise Corporates",
+                category: "NETCOM",
+                summary: "La nécessité de disposer de liaisons radio privées autonomes pour la continuité d'activité des consortiums industriels et de sécurité.",
+                icon: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#D4AF37" stroke-width="2">
+                        <circle cx="12" cy="12" r="6" />
+                        <circle cx="36" cy="12" r="6" />
+                        <circle cx="24" cy="36" r="6" />
+                        <line x1="12" y1="18" x2="21" y2="31" />
+                        <line x1="36" y1="18" x2="27" y2="31" />
+                        <line x1="18" y1="12" x2="30" y2="12" />
+                       </svg>`
+            },
+            {
+                title: "Les Modèles de Langage (LLM) Locaux et Offline",
+                category: "Souveraineté IA",
+                summary: "Faire tourner des serveurs d'IA locaux sur des postes de travail physiques pour préserver le secret professionnel et la sécurité des données.",
+                icon: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#D4AF37" stroke-width="2">
+                        <circle cx="24" cy="24" r="18" />
+                        <path d="M12 24 L18 24 L24 12 L24 36 L30 24 L36 24" />
+                       </svg>`
+            },
+            {
+                title: "Conformité de Paie OHADA et Rapprochement CNPS",
+                category: "METRIX",
+                summary: "Comment nos algorithmes d'audit croisé éliminent les risques de redressement fiscal et social pour les holdings de l'Ouest.",
+                icon: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#D4AF37" stroke-width="2">
+                        <line x1="6" y1="42" x2="42" y2="42" />
+                        <line x1="12" y1="42" x2="12" y2="30" />
+                        <line x1="24" y1="42" x2="24" y2="18" />
+                        <line x1="36" y1="42" x2="36" y2="10" />
+                       </svg>`
+            },
+            {
+                title: "La Diaspora, Acteur Clé de la Révolution Technologique",
+                category: "Diaspora",
+                summary: "Sécurisation des apports et planification d'investissements locaux d'envergure grâce au suivi technique à distance de TIT-CS.",
+                icon: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#D4AF37" stroke-width="2">
+                        <circle cx="24" cy="24" r="18" />
+                        <path d="M6 24 C6 24 15 15 24 24 C33 33 42 24 42 24" />
+                       </svg>`
+            }
+        ];
+
+        function renderScheduledArticles() {
+            if (!blogContainer) return;
+            blogContainer.innerHTML = "";
+            
+            // Simulates scheduler offset: rotates posts queue depending on current day!
+            const dayOffset = new Date().getDate() % localArticles.length;
+            const scheduledList = [
+                ...localArticles.slice(dayOffset),
+                ...localArticles.slice(0, dayOffset)
+            ].slice(0, 3); // Take top 3 for layout
+
+            scheduledList.forEach(art => {
+                const card = document.createElement('div');
+                card.className = "blog-card";
+                card.innerHTML = `
+                    <div class="blog-content">
+                        <div style="margin-bottom: 20px;">${art.icon}</div>
+                        <div class="blog-date">Publication Automatique d'IA · ${art.category}</div>
+                        <h3 class="blog-title">${art.title}</h3>
+                        <p class="blog-summary">${art.summary}</p>
+                        <a href="#contact" class="blog-readmore" style="color: var(--gold); text-decoration: none; font-weight: bold;">Discuter de cette solution ➔</a>
+                    </div>
+                `;
+                blogContainer.appendChild(card);
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", renderScheduledArticles);
+        renderScheduledArticles(); // Fallback trigger
     </script>
     
 </body>
